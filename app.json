@@ -1,0 +1,20 @@
+{
+  "application": "pagelatency",
+  "cloneable": false,
+  "owner": "cwkoss",
+  "readers": [
+    "public"
+  ],
+  "referers": [],
+  "secureData": false,
+  "tags": [
+    "tools,",
+    "bandwidth"
+  ],
+  "title": "Page Latency",
+  "url": "http://pagelatency.pageforest.com/",
+  "writers": [
+    "cwkoss",
+    "mckoss"
+  ]
+}
