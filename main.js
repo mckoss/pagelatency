@@ -7,9 +7,10 @@ namespace.lookup('com.pageforest.pagelatency').defineOnce(function (exports) {
   exports['loaded'] = loaded;
   exports['go'] = go;
   exports['save'] = save;
+  exports['addTarget'] = addTarget;
   
   
-  var jsonblob = {blob: { info:"info" },
+  var jsonblob = {blob: { target:"http://www.cwkoss.com" },
                   title: "A default document title.",
                   readers: ["public"],
                   writers: ["public"]};
@@ -25,6 +26,22 @@ namespace.lookup('com.pageforest.pagelatency').defineOnce(function (exports) {
   var starttime = new Date().getTime();
   var totalload = 0;
   var contload = false;   
+  
+  
+  
+  var activeTargets = [];
+  
+  function addTarget() {
+    activeTargets.push(document.getElementById("targetUrl").value);
+    drawTargets();
+  }
+  
+  function drawTargets() {
+    document.getElementById("testcontainer").innerHTML = "";
+    for(var i = 0; i < activeTargets.length; i++) {
+      document.getElementById("testcontainer").innerHTML += activeTargets[i];
+    }
+  }
   
   function loaded() {
     loadcount++;
@@ -77,7 +94,14 @@ namespace.lookup('com.pageforest.pagelatency').defineOnce(function (exports) {
   
   function save() {
     storage.putDoc("masterblob", jsonblob, function(){alert("putDoc");});
-    storage.getDoc("masterblob", function(){alert("getDoc");});
+    storage.getDoc("masterblob", getTarget);
+
+    //storage.getDoc("masterblob", function(){alert("getDoc");});
+  }
+  
+  function getTarget(docreturn) {
+    console.log(docreturn);
+    document.getElementById("targetUrl").value = docreturn.blob.target;
   }
   
     function PageLatency() {

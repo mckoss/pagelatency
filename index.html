@@ -32,7 +32,11 @@
   
   <br>
   
-  <input type="text" id="targetUrl" width="500" value="http://cwkoss.com" />
+  <input type="text" id="targetUrl" width="500" value="http://" />
+  <input type="button" id="addTarget" value="Add Target" onclick="pagelatency.addTarget()" />
+  
+  
+  
   <select id="selectTime"><option value="1">Max Speed</option>
     <option value="100" selected>1/10th Sec</option>
     <option value="1000" selected>1 Second</option>
@@ -43,7 +47,10 @@
   <input id="gobutton" type="button" value="Go" onclick="pagelatency.go()" />
   
 
-  <iframe id="myframe" src="http://cwkoss.com" width="100%" height="100%" onload="pagelatency.loaded();" />
+  <div id="testcontainer" width="100%">
+  </div>
+  
+  <iframe id="myframe" src="http://" width="100%" height="100%" onload="pagelatency.loaded();" />
 
 </div> <!-- page -->
 
