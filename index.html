@@ -5,6 +5,9 @@
 <title>Page Latency Pageforest Application</title>
 
 <script type="text/javascript" src="/lib/beta/js/pf-client.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+   
+  
 <link rel="stylesheet" type="text/css" href="style.css" /> 
   
 <script type="text/javascript" src="main.js"></script>
@@ -12,6 +15,7 @@
 <script type="text/javascript">
   // Call the onReady function of the application when the page is loaded.
   var pagelatency = namespace.lookup("com.pageforest.pagelatency");
+  google.load("visualization", "1", {packages:["corechart"]});
   $(document).ready(function () {
     pagelatency.main();
   });
@@ -32,8 +36,8 @@
   
   <br>
   
-  <input type="text" id="targetUrl" width="500" value="http://" />
-  <input type="button" id="addTarget" value="Add Target" onclick="pagelatency.addTarget()" />
+  <input type="text" id="targetUrl" width="500" value="http://cwkoss.com/rules.html" />
+  <!--<input type="button" id="addTarget" value="Add Target" onclick="pagelatency.addTarget()" />-->
   
   
   
@@ -49,9 +53,10 @@
 
   <div id="testcontainer" width="100%">
   </div>
+  <div id="chart_div"></div>
+  <input type="button" onclick="pagelatency.drawChart();" value="Draw Chart" />
   
-  <iframe id="myframe" src="http://" width="100%" height="100%" onload="pagelatency.loaded();" />
-
+  <div class="thumbnail"><iframe id="myframe" src="http://" width="100%" height="100%" onload="pagelatency.loaded();" /> </div>
 </div> <!-- page -->
 
 

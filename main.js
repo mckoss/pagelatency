@@ -7,7 +7,9 @@ namespace.lookup('com.pageforest.pagelatency').defineOnce(function (exports) {
   exports['loaded'] = loaded;
   exports['go'] = go;
   exports['save'] = save;
-  exports['addTarget'] = addTarget;
+  //exports['addTarget'] = addTarget;
+  //exports['removeTarg'] = removeTarg;
+  exports['drawChart'] = drawChart;
   
   
   var jsonblob = {blob: { target:"http://www.cwkoss.com" },
@@ -26,12 +28,13 @@ namespace.lookup('com.pageforest.pagelatency').defineOnce(function (exports) {
   var starttime = new Date().getTime();
   var totalload = 0;
   var contload = false;   
-  
+  var latencyTimes = [];
+  var domainStart = starttime;
   
   
   var activeTargets = [];
   
-  function addTarget() {
+  /*function addTarget() {
     activeTargets.push(document.getElementById("targetUrl").value);
     drawTargets();
   }
@@ -39,13 +42,29 @@ namespace.lookup('com.pageforest.pagelatency').defineOnce(function (exports) {
   function drawTargets() {
     document.getElementById("testcontainer").innerHTML = "";
     for(var i = 0; i < activeTargets.length; i++) {
-      document.getElementById("testcontainer").innerHTML += activeTargets[i];
+      var temp = document.createElement('div');
+      temp.id = "targBox" + i;
+      temp.className = "targBox";
+      temp.innerHTML = '<iframe id="myframe' + i + '" src="' + activeTargets[i] + '" onload="pagelatency.loaded();"></iframe>' +
+                 '' + activeTargets[i] + ' <input type="button" value="X" onclick="pagelatency.removeTarg(' + i + ')" />';
+      console.log(temp.innerHTML);
+      document.getElementById("testcontainer").appendChild(temp);
+        //'<div class="targBox" id="targBox' + i + '">' + 
+        //'<iframe id="myframe' + i + '" src="' + activeTargets[i] + '" onload="pagelatency.loaded();" />' +
+       // activeTargets[i] + '<input type="button" value="X" onclick="pagelatency.removeTarg(' + i + ')" /></div>';
     }
+  }*/
+  
+  function removeTarg(position) {
+    activeTargets.splice(position, 1);
+    drawTargets();
   }
   
   function loaded() {
     loadcount++;
     var lasttime = new Date().getTime() - starttime;
+    latencyTimes.push({ms:lasttime, when:new Date().getTime()});
+    drawChart();
     totalload += lasttime;
     $("#stats").text("Last Load Time: " + lasttime + 
       "ms,  Load Count: " + loadcount + " Average Load Time: " + parseInt(totalload/loadcount) +
@@ -88,7 +107,7 @@ namespace.lookup('com.pageforest.pagelatency').defineOnce(function (exports) {
   
   function reload(){
     targUrl = document.getElementById("targetUrl").value;
-    document.getElementById("myframe").src = targUrl;
+    document.getElementById("myframe").src = targUrl + "?" + Math.random();
     starttime = new Date().getTime();
   }
   
@@ -118,8 +137,33 @@ namespace.lookup('com.pageforest.pagelatency').defineOnce(function (exports) {
         app = new PageLatency();
         client = new clientLib.Client(app);
         storage = client.storage;
+       google.setOnLoadCallback(drawChart);
     }
 
   
+    //google.load("visualization", "1", {packages:["corechart"]});
+    //google.setOnLoadCallback(drawChart);
+  
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('number', 'Time');
+        data.addColumn('number', 'Latency (ms)');
+        data.addRows(latencyTimes.length);
+        for(var i = 0; i < latencyTimes.length; i++) {
+          data.setValue(i, 0, latencyTimes[i].when-domainStart);
+          data.setValue(i, 1, latencyTimes[i].ms);
+        }
+        
+
+
+        var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
+        chart.draw(data, {width: 500, height: 500,
+                          title: 'Age vs. Weight comparison',
+                          vAxis: {title: 'Latency', minValue: 0, maxValue: 100},
+                          hAxis: {title: 'Time', minValue: 0, maxValue: latencyTimes[latencyTimes.length-1].ms},
+                          legend: 'none'
+                         });
+      }
+    
 
 });
